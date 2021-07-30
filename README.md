@@ -1,1 +1,1 @@
-amazon-clone-two
+Amazon Clone 2.0
