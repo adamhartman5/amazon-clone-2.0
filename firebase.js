@@ -1,4 +1,3 @@
-<script>
   // Your web app's Firebase configuration
   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
   var firebaseConfig = {
@@ -10,7 +9,8 @@
     appId: "1:378610183471:web:2a19630c689e6f7bbe05da",
     measurementId: "G-98LW7GBHTF"
   };
-  // Initialize Firebase
+// Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   firebase.analytics();
-</script>
+
+  var db = firebase.firestore();
