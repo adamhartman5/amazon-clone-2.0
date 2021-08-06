@@ -1,3 +1,5 @@
+
+
 function getCartItems() {
     db.collection("cart-items").onSnapshot((querySnapshot) =>{
         let totalCount = 0;
