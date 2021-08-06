@@ -15,6 +15,10 @@ function getItems(){
     });
 }
 
+function addToCart(item){
+    
+}
+
 function generateItems(items) {
     let itemsHTML = "";
     items.forEach((item) => {
@@ -41,6 +45,9 @@ function generateItems(items) {
         let addToCartEl = document.createElement("div");
         addToCartEl.classList.add("product-add", "h-8", "w-28", "bg-yellow-500", "flex", "items-center", "justify-center", "text-gray-700", "rounded", "text-md", "cursor-pointer", "hover:bg-yellow-600");
         addToCartEl.innerText = "Add to cart";
+        addToCartEl.addEventListener("click", function(){
+            addToCart(item);
+        })
         doc.appendChild(addToCartEl);
         document.querySelector(".main-section-products").appendChild(doc);
     })
