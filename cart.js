@@ -4,12 +4,49 @@ function getCartItems() {
         snapshot.forEach(doc => {
             cartItems.push({
                 id: doc.data().id,
-                image: doc.data().image,
-                name: doc.data().name,
-                brand: doc.data().brand,
-                rating: doc.data().rating,
-                price: doc.data().price
+                ...doc.data()
             })
         })
+        generateCartItems(cartItems);
     })
 }
+
+function generateCartItems(cartItems) {
+    let itemsHTML = "";
+    cartItems.forEach((item) => {
+        itemsHTML += `
+        <div class="cart-item flex items-center pb-4 border-b border-blue-400">
+        <div class="cart-item-image w-40 h-24 bg-gray-700 p-4 rounded-lg">
+            <img class="w-full h-full object-contain" src="${item.image}">
+        </div>
+        <div class="cart-item-details flex-grow">
+            <div class="cart-item-title font-bold text-sm text-blue-400">
+                ${item.name}
+            </div>
+            <div class="cart-item-brand text-sm text-blue-400">
+                ${item.brand}
+            </div>
+        </div>
+        <div class="cart-item-counter w-48 flex items-center">
+            <div class="chevron-left cursor-pointer text-blue-400 bg-gray-700 rounded h-6 w-6 flex justify-center items-center hover:bg-gray-50 mr-2">
+                <i class="fas fa-chevron-left fa-xs"></i>
+            </div>
+            <h4 class="text-blue-400">x${item.quantity}</h4>
+            <div class="chevron-right cursor-pointer text-blue-400 bg-gray-700 rounded h-6 w-6 flex justify-center items-center hover:bg-gray-50 ml-2">
+                <i class="fas fa-chevron-right fa-xs"></i>
+            </div>
+        </div>
+        <div class="cart-item-total-cost w-48 flex font-bold text-blue-400">
+            $${item.price * item.quantity}
+        </div>
+        <div class="cart-item-delete w-10 font-bold cursor-pointer text-gray-50 hover:text-blue-400">
+            <i class="fas fa-times"></i>
+        </div>
+    </div>
+        `
+    })
+
+    document.querySelector(".cart-items").innerHTML = itemsHTML;
+}
+
+getCartItems()
