@@ -24,7 +24,7 @@ function addToCart(item){
                 quantity: doc.data().quantity + 1
             })
         } else {
-            cartItem.set({
+            cartItem    .set({
                 image: item.image,
                 brand: item.brand,
                 name: item.name,
