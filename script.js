@@ -16,7 +16,24 @@ function getItems(){
 }
 
 function addToCart(item){
-    
+    let cartItem = db.collection("cart-items").doc(item.id)
+    cartItem.get()
+    .then(function(doc){
+        if(doc.exists){
+            cartItem.update({
+                quantity: doc.data().quantity + 1
+            })
+        } else {
+            cartItem.set({
+                image: item.image,
+                brand: item.brand,
+                name: item.name,
+                rating: item.rating,
+                price: item.price,
+                quantity: 1
+            })
+        }
+    })
 }
 
 function generateItems(items) {
