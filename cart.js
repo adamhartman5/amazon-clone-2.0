@@ -8,7 +8,7 @@ function getCartItems() {
                 name: doc.data().name,
                 brand: doc.data().brand,
                 rating: doc.data().rating,
-                price: doc.data().price,
+                price: doc.data().price
             })
         })
     })
