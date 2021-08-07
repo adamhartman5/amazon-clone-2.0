@@ -8,6 +8,7 @@ function getCartItems() {
             })
         })
         generateCartItems(cartItems);
+        generateTotalCost();
     })
 }
 
@@ -27,7 +28,7 @@ function decreaseCount(itemId) {
 function increaseCount(itemId) {
     let cartItem = db.collection("cart-items").doc(itemId);
     cartItem.get().then(function(doc) {
-        if(doc.exists) {
+        if (doc.exists) {
             if(doc.data().quantity > 0) {
                 cartItem.update({
                     quantity: doc.data().quantity + 1
@@ -35,6 +36,11 @@ function increaseCount(itemId) {
             }
         }
     })
+}
+
+function deleteItem(itemId) {
+    let cartItem = db.collection("cart-items").doc(itemId);
+    cartItem.delete().then;
 }
 
 function generateCartItems(cartItems) {
@@ -58,14 +64,14 @@ function generateCartItems(cartItems) {
                 <i class="fas fa-chevron-left fa-xs"></i>
             </div>
             <h4 class="text-blue-400">x${item.quantity}</h4>
-            <div data-id="${item.id} "class="cart-item-increase cursor-pointer text-blue-400 bg-gray-700 rounded h-6 w-6 flex justify-center items-center hover:bg-gray-50 ml-2">
+            <div data-id="${item.id}" class="cart-item-increase cursor-pointer text-blue-400 bg-gray-700 rounded h-6 w-6 flex justify-center items-center hover:bg-gray-50 ml-2">
                 <i class="fas fa-chevron-right fa-xs"></i>
             </div>
         </div>
         <div class="cart-item-total-cost w-48 flex font-bold text-blue-400">
-            $${item.price * item.quantity}
+            $${(item.price * item.quantity).toFixed(2)}
         </div>
-        <div class="cart-item-delete w-10 font-bold cursor-pointer text-gray-50 hover:text-blue-400">
+        <div data-id="${item.id}" class="cart-item-delete w-10 font-bold cursor-pointer text-gray-50 hover:text-blue-400">
             <i class="fas fa-times"></i>
         </div>
     </div>
@@ -76,9 +82,24 @@ function generateCartItems(cartItems) {
     createEventListeners();
 }
 
+function generateTotalCost() {
+    db.collection("cart-items").onSnapshot((snapshot) => {
+        let totalCost = 0;
+        snapshot.forEach((doc => {
+            totalCost += (doc.data().price * doc.data().quantity);
+        }))
+        setTotalCost(totalCost);
+    })
+}
+
+function setTotalCost(totalCost) {
+    document.querySelector(".total-cost-number").innerText = totalCost.toFixed(2);
+}
+
 function createEventListeners() {
     let decreaseButtons = document.querySelectorAll(".cart-item-decrease");
     let increaseButtons = document.querySelectorAll(".cart-item-increase");
+    let deleteButtons = document.querySelectorAll(".cart-item-delete");
 
     decreaseButtons.forEach((button) => {
         button.addEventListener("click", function (){
@@ -86,11 +107,17 @@ function createEventListeners() {
         })
     })
 
-    increaseButtons.forEach(button) => {
+    increaseButtons.forEach((button) => {
         button.addEventListener("click", function() {
             increaseCount(button.dataset.id);
         })
-    }
+    })
+
+    deleteButtons.forEach((button) => {
+        button.addEventListener("click", function() {
+            deleteItem(button.dataset.id);
+        })
+    })
 }
 
 getCartItems()
