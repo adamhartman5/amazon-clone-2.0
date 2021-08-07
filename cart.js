@@ -24,6 +24,19 @@ function decreaseCount(itemId) {
     })
 }
 
+function increaseCount(itemId) {
+    let cartItem = db.collection("cart-items").doc(itemId);
+    cartItem.get().then(function(doc) {
+        if(doc.exists) {
+            if(doc.data().quantity > 0) {
+                cartItem.update({
+                    quantity: doc.data().quantity + 1
+                })
+            }
+        }
+    })
+}
+
 function generateCartItems(cartItems) {
     let itemsHTML = "";
     cartItems.forEach((item) => {
@@ -72,6 +85,12 @@ function createEventListeners() {
             decreaseCount(button.dataset.id);
         })
     })
+
+    increaseButtons.forEach(button) => {
+        button.addEventListener("click", function() {
+            increaseCount(button.dataset.id);
+        })
+    }
 }
 
 getCartItems()
