@@ -11,6 +11,19 @@ function getCartItems() {
     })
 }
 
+function decreaseCount(itemId) {
+    let cartItem = db.collection("cart-items").doc(itemId);
+    cartItem.get().then(function(doc) {
+        if (doc.exists) {
+            if (doc.data().quantity > 1) {
+                cartItem.update({
+                    quantity: doc.data().quantity - 1
+                })
+            }
+        }
+    })
+}
+
 function generateCartItems(cartItems) {
     let itemsHTML = "";
     cartItems.forEach((item) => {
@@ -28,11 +41,11 @@ function generateCartItems(cartItems) {
             </div>
         </div>
         <div class="cart-item-counter w-48 flex items-center">
-            <div class="chevron-left cursor-pointer text-blue-400 bg-gray-700 rounded h-6 w-6 flex justify-center items-center hover:bg-gray-50 mr-2">
+            <div data-id="${item.id}" class="cart-item-decrease cursor-pointer text-blue-400 bg-gray-700 rounded h-6 w-6 flex justify-center items-center hover:bg-gray-50 mr-2">
                 <i class="fas fa-chevron-left fa-xs"></i>
             </div>
             <h4 class="text-blue-400">x${item.quantity}</h4>
-            <div class="chevron-right cursor-pointer text-blue-400 bg-gray-700 rounded h-6 w-6 flex justify-center items-center hover:bg-gray-50 ml-2">
+            <div data-id="${item.id} "class="cart-item-increase cursor-pointer text-blue-400 bg-gray-700 rounded h-6 w-6 flex justify-center items-center hover:bg-gray-50 ml-2">
                 <i class="fas fa-chevron-right fa-xs"></i>
             </div>
         </div>
@@ -47,6 +60,18 @@ function generateCartItems(cartItems) {
     })
 
     document.querySelector(".cart-items").innerHTML = itemsHTML;
+    createEventListeners();
+}
+
+function createEventListeners() {
+    let decreaseButtons = document.querySelectorAll(".cart-item-decrease");
+    let increaseButtons = document.querySelectorAll(".cart-item-increase");
+
+    decreaseButtons.forEach((button) => {
+        button.addEventListener("click", function (){
+            decreaseCount(button.dataset.id);
+        })
+    })
 }
 
 getCartItems()
