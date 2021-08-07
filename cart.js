@@ -8,7 +8,7 @@ function getCartItems() {
             })
         })
         generateCartItems(cartItems);
-        generateTotalCost();
+        generateTotalCost(cartItems);
     })
 }
 
@@ -39,8 +39,7 @@ function increaseCount(itemId) {
 }
 
 function deleteItem(itemId) {
-    let cartItem = db.collection("cart-items").doc(itemId);
-    cartItem.delete().then;
+    let cartItem = db.collection("cart-items").doc(itemId).delete();
 }
 
 function generateCartItems(cartItems) {
@@ -69,7 +68,7 @@ function generateCartItems(cartItems) {
             </div>
         </div>
         <div class="cart-item-total-cost w-48 flex font-bold text-blue-400">
-            $${(item.price * item.quantity).toFixed(2)}
+            ${numeral(item.price * item.quantity).format('$0,0.00')}
         </div>
         <div data-id="${item.id}" class="cart-item-delete w-10 font-bold cursor-pointer text-gray-50 hover:text-blue-400">
             <i class="fas fa-times"></i>
@@ -82,18 +81,12 @@ function generateCartItems(cartItems) {
     createEventListeners();
 }
 
-function generateTotalCost() {
-    db.collection("cart-items").onSnapshot((snapshot) => {
-        let totalCost = 0;
-        snapshot.forEach((doc => {
-            totalCost += (doc.data().price * doc.data().quantity);
-        }))
-        setTotalCost(totalCost);
-    })
-}
-
-function setTotalCost(totalCost) {
-    document.querySelector(".total-cost-number").innerText = totalCost.toFixed(2);
+function generateTotalCost(items) {
+    let totalCost = 0;
+    items.forEach((item) => {
+        totalCost += (item.price * item.quantity);
+    });
+    document.querySelector(".total-cost-number").innerText = numeral(totalCost).format('$0,0.00');
 }
 
 function createEventListeners() {
