@@ -3,7 +3,7 @@ function getCartItems() {
         let cartItems = [];
         snapshot.forEach(doc => {
             cartItems.push({
-                id: doc.data().id,
+                id: doc.id,
                 ...doc.data()
             })
         })
